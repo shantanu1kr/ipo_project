@@ -1,0 +1,945 @@
+{% extends 'companymaster/base.html' %}
+{% load static %}
+{% csrf_token %}
+{% load widget_tweaks %} 
+{% block content %}
+
+<div class="container-fluid" id="headerbx" style="background-image:url('{% static 'asset/bg.jpg' %}');">
+	<div class="container-fluid filtersearch">
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="headingbg">
+					<h5><i class="icofont-plus"></i> Add Company</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- MODAL -->
+<div class="modal fade" id="addpdf" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 class="modal-title">Add</h4>
+		  <button type="button" class="close" data-dismiss="modal">
+			<i class="icofont-close-circled"></i>
+		  </button>
+		</div>
+		<div class="modal-body">
+		   <div class="form-group">
+					<label>File Name</label>
+					<div class="line"></div>
+					<input type='text' class='dtfc form-control' name='filename' id='uploadfilename' />
+			</div>
+			<div class="form-group">
+					<label>Add PDF LINK</label>
+					<div class="line"></div>
+					<input type='text' class='dtfc form-control' name='uri' id='pdf_uri' />
+			</div>
+		  <div class="form-group">
+					<label>Add PDF File</label>
+					<div class="line"></div>
+					<input type='file' accept="application/pdf"  class='dtfc form-control' name='file' id='pdf_file' />
+			</div>
+		  
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		  <button type="button" class="btn btn-primary" onclick="addPDF()">Save changes</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+
+  
+<div class="modal fade" id="pdf-upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 class="modal-title">Add</h4>
+		  <button type="button" class="close" data-dismiss="modal">
+			<i class="icofont-close-circled"></i>
+		  </button>
+		  
+		</div>
+		<div class="modal-body">
+			<div class="container-fluid">
+			<!-- Issue Name-->
+				<div class="row">
+					<div class="col-md-6 ml-auto">
+						<div class="form-group">
+							<label class='required-field'>Issuer Name PDF</label>
+							{% if companyID %}
+							{{form.issuer_names_pdf | attr:"readonly:true"}}
+							{% else %}
+							{{form.issuer_names_pdf}}
+							{% endif %}
+							<div class="fr" style='display:flex; justify-content:space-between;width:100%;align-items:center'>
+								<a href="" style='flex:1' target="_new" ><i class="icofont-file-pdf"></i>
+									View PDF 
+								</a>
+								<a style='cursor:pointer;' data-toggle="modal" data-target="#exampleModal" type="button" ><i class="icofont-add"></i>
+									Add PDF
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 ml-auto">
+						<div class="form-group">
+							<label class='required-field'>Issuer Name Page No</label>
+							{% if companyID %}
+							{{form.issuer_names_page_no | attr:"readonly:true"}}
+							{% else %}
+							{{form.issuer_names_page_no}}
+							{% endif %}
+							<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+									View PDF </a></div>
+						</div>
+					</div>
+
+				</div>
+			<!-- Country -->
+				<div class="row">
+					<div class="col-md-6 ml-auto">
+						<div class="form-group">
+							<label class='required-field'>Country PDF</label>
+							<div class="line"></div>
+								{{form.country_pdf}}
+							<div class="fr" style='display:flex; justify-content:space-between;width:100%;align-items:center'>
+								<a href="" style='flex:1' target="_new" ><i class="icofont-file-pdf"></i>
+									View PDF 
+								</a>
+								<a style='cursor:pointer;' data-toggle="modal" data-target="#pdf-upload" type="button" ><i class="icofont-add"></i>
+									Add PDF
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 ml-auto">
+						<div class="form-group">
+							<label class='required-field'>Country PDF</label>
+							<div class="line"></div>
+								{{form.country_page_no}}
+							<div class="fr" style='display:flex; justify-content:space-between;width:100%;align-items:center'>
+								<a href="" style='flex:1' target="_new" ><i class="icofont-file-pdf"></i>
+									View PDF 
+								</a>
+								<a style='cursor:pointer;' data-toggle="modal" data-target="#pdf-upload" type="button" ><i class="icofont-add"></i>
+									Add PDF
+								</a>
+							</div>
+						</div>
+
+					</div>
+			
+
+				</div>
+			<!-- business -->
+				<div class="row">
+					<div class="col-md-6 ml-auto">
+						<div class="form-group">
+							<label class='required-field'>Business PDF</label>
+							<div class="line"></div>
+								{{form.business_pdf}}
+							<div class="fr" style='display:flex; justify-content:space-between;width:100%;align-items:center'>
+								<a href="" style='flex:1' target="_new" ><i class="icofont-file-pdf"></i>
+									View PDF 
+								</a>
+								<a style='cursor:pointer;' data-toggle="modal" data-target="#pdf-upload" type="button" ><i class="icofont-add"></i>
+									Add PDF
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 ml-auto">
+						<div class="form-group">
+							<label class='required-field'>Business Page No</label>
+							<div class="line"></div>
+								{{form.business_page_no}}
+							<div class="fr" style='display:flex; justify-content:space-between;width:100%;align-items:center'>
+								<a href="" style='flex:1' target="_new" ><i class="icofont-file-pdf"></i>
+									View PDF 
+								</a>
+								<a style='cursor:pointer;' data-toggle="modal" data-target="#pdf-upload" type="button" ><i class="icofont-add"></i>
+									Add PDF
+								</a>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+
+			<!-- Address -->
+				<div class="row">
+					<div class="col-md-6 ml-auto">
+						<div class="form-group">
+							<label class='required-field'>Address PDF</label>
+							<div class="line"></div>
+								{{form.address_pdf}}
+							<div class="fr" style='display:flex; justify-content:space-between;width:100%;align-items:center'>
+								<a href="" style='flex:1' target="_new" ><i class="icofont-file-pdf"></i>
+									View PDF 
+								</a>
+								<a style='cursor:pointer;' data-toggle="modal" data-target="#pdf-upload" type="button" ><i class="icofont-add"></i>
+									Add PDF
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 ml-auto">
+						<div class="form-group">
+							<label class='required-field'>Address Page No</label>
+							<div class="line"></div>
+								{{form.address_pdf}}
+							<div class="fr" style='display:flex; justify-content:space-between;width:100%;align-items:center'>
+								<a href="" style='flex:1' target="_new" ><i class="icofont-file-pdf"></i>
+									View PDF 
+								</a>
+								<a style='cursor:pointer;' data-toggle="modal" data-target="#pdf-upload" type="button" ><i class="icofont-add"></i>
+									Add PDF
+								</a>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			
+			<!-- exchange -->
+				<div class="row">
+					<div class="col-md-6 ml-auto">
+						<div class="form-group">
+							<label class='required-field'>Exchange PDF</label>
+							<div class="line"></div>
+								{{form.exchange_pdf}}
+							<div class="fr" style='display:flex; justify-content:space-between;width:100%;align-items:center'>
+								<a href="" style='flex:1' target="_new" ><i class="icofont-file-pdf"></i>
+									View PDF 
+								</a>
+								<a style='cursor:pointer;' data-toggle="modal" data-target="#pdf-upload" type="button" ><i class="icofont-add"></i>
+									Add PDF
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 ml-auto">
+						<div class="form-group">
+							<label class='required-field'>Exchange Page No</label>
+							<div class="line"></div>
+								{{form.exchange_page_no}}
+							<div class="fr" style='display:flex; justify-content:space-between;width:100%;align-items:center'>
+								<a href="" style='flex:1' target="_new" ><i class="icofont-file-pdf"></i>
+									View PDF 
+								</a>
+								<a style='cursor:pointer;' data-toggle="modal" data-target="#pdf-upload" type="button" ><i class="icofont-add"></i>
+									Add PDF
+								</a>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			
+			<!-- Symbol -->
+				<div class="row">
+					<div class="col-md-6 ml-auto">
+						<div class="form-group">
+							<label class='required-field'>Symbol PDF</label>
+							<div class="line"></div>
+								{{form.symbol_pdf}}
+							<div class="fr" style='display:flex; justify-content:space-between;width:100%;align-items:center'>
+								<a href="" style='flex:1' target="_new" ><i class="icofont-file-pdf"></i>
+									View PDF 
+								</a>
+								<a style='cursor:pointer;' data-toggle="modal" data-target="#pdf-upload" type="button" ><i class="icofont-add"></i>
+									Add PDF
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 ml-auto">
+						<div class="form-group">
+							<label class='required-field'>Symbol Page No</label>
+							<div class="line"></div>
+								{{form.symbol_page_no}}
+							<div class="fr" style='display:flex; justify-content:space-between;width:100%;align-items:center'>
+								<a href="" style='flex:1' target="_new" ><i class="icofont-file-pdf"></i>
+									View PDF 
+								</a>
+								<a style='cursor:pointer;' data-toggle="modal" data-target="#pdf-upload" type="button" ><i class="icofont-add"></i>
+									Add PDF
+								</a>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			
+			
+			</div>
+  		</div>
+		
+
+		<div class="modal-footer">
+		  {% comment %} <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> {% endcomment %}
+		  <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+
+<!-- MODAL END -->
+<div class="container-fluid" id="contentmaindiv">
+	<div class="container-fluid whitepatch">
+		<div class="tp_side">
+			<div class="row">
+				<div class="col-md-6">
+					<h3 class="tb_head"><i class="icofont-info-circle"></i> Company Info</h3>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-2" style='display:flex;gap:4px;margin-left:auto;justify-content:start'>
+					<button style='margin-left:auto;' data-toggle="modal" data-target="#addpdf" type="button" class="btn-sm btn-info btn fl_rg shw" data-original-title="" title=""><i class="icofont-plus"></i> <span>Add PDF</span></button>
+					<div style='width:100px;display:flex;flex-direction:column;'>
+					{{form.pdf}}
+					<div class="fr" ><a href="{% static 'asset/pdf.pdf' %}" target="_blank"><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+					</div>
+					
+					</div>
+				</div>
+				
+				
+			</div>
+		</div>
+
+		<div class="row">
+
+			<!--<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">ID</label>
+					<input class="dtfc form-control" type="text" placeholder="123" / disabled>
+				</div>
+			</div>-->
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label class='required-field'>Issuer Name</label>
+					{% if companyID %}
+					{{form.issuer_names | attr:"readonly:true"}}
+					{% else %}
+					{{form.issuer_names}}
+					{% endif %}
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{form.issuer_names_pdf}}
+						{{form.issuer_names_page_no}}
+					</div>
+					
+				</div>
+			</div>
+			
+		
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">No. of Employee</label>
+
+					{{form.no_of_employees}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"></div>
+				</div>
+			</div>
+
+
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label class='required-field'>Currency</label>
+					<div class="line"></div>
+					{{form.currency}}
+					<div class="fr"></div>
+				</div>
+			</div>
+
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Establishment</label>
+					{{form.establishment}}
+					<div class="fr"></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label class='required-field'>Country</label>
+					<div class="line"></div>
+					{{form.country}}
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{form.country_pdf}}
+						{{form.country_page_no}}
+					</div>
+				</div>
+			</div>
+			
+			
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label>Industry</label> 
+					<div class="line"></div>
+					{{form.industry}}
+					<div class="fr"><a  ><i class="icofont-file-pdf"></i>
+					</a></div>
+				</div>
+			</div>
+
+
+			<div class="col-md-4 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Business Description</label>
+					{{form.business_description}}
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{form.business_pdf}}
+						{{form.business_page_no}}
+					</div>
+				</div>
+			</div>
+		
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Address</label>
+					{{form.address}}
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{form.address_pdf}}
+						{{form.address_page_no}}
+					</div>
+				</div>
+			</div>
+			
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Website</label>
+					{{form.website}}
+					<div class="fr"></div>
+				</div>
+			</div>
+
+			
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Exchange</label>
+					{{form.exchange}}
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{form.exchange_pdf}}
+						{{form.exchange_page_no}}
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Contact No.</label>
+					{{form.contact_no}}
+					<div class="fr"><a  ><i class="icofont-file-pdf"></i>
+							 </a></div>
+				</div>
+			</div>
+			
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label>Country Exchange</label>
+					<div class="line"></div>
+					{{form.country_exchange}}
+					<div class="fr"></div>
+				</div>
+			</div>
+
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Financial Year End</label>
+					{{form.financial}}
+					<div class="fr"></div>
+				</div>
+			</div>
+			
+			
+
+
+		</div>
+	</div>
+</div>
+
+
+<div class="container-fluid" id="contentmaindiv">
+	<div class="container-fluid whitepatch">
+		<div class="tp_side">
+			<div class="row">
+				<div class="col-md-6">
+					<h3 class="tb_head"><i class="icofont-info-circle"></i> Identifier</h3>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr" class='required-field'>Symbol</label>
+					{{form.symbol}}
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{form.symbol_pdf}}
+						{{form.symbol_page_no}}
+					</div>
+
+				</div>
+			</div>
+			
+			
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">CIK</label>
+					{{form.CIK}}
+					<div class="fr"></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">CUSIP</label>
+					{{form.CUSIP}}
+					<div class="fr"></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">ISIN</label>
+					{{form.ISIN}}
+					<div class="fr"></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">LEI</label>
+					{{form.LEI}}
+					<div class="fr"></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">SEDOL</label>
+					{{form.SEDOL}}
+					<div class="fr"><a  ><i class="icofont-file-pdf"></i>
+					</a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">MIC Code</label>
+					{{form.MIC_Code}}
+					<div class="fr"></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">MIC Seg</label>
+					{{form.MIC_Seg}}
+					<div class="fr"></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">SIC Code</label>
+					{{form.SIC_Code}}
+					<div class="fr"></div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			{% if companyID %}
+			<button onclick="Update()" type="button" class="btn btn-success shw">Update</button>
+			<a href="/addcompany-2-update/{{companyID}}/{{tid}}" type="button" class="btn btn-primary shw">Next</a>	
+			{% else %}
+			<button onclick="submitForm()" type="button" class="btn btn-success shw">Submit</button>
+			<a href="{% url 'addcompany-2' %}" type="button" class="btn btn-primary shw">Next</a>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+
+</div>
+<!----------content-wrap-------------->
+
+<!-- <div id="footer"> -->
+	<!-- <div class="container-fluid"> -->
+		<!-- <div class="pull-right hidden-xs"> -->
+			<!-- <b>Version</b> 2.4.0 -->
+		<!-- </div>Copyright © 2018-2019 <a href="https://www.decimalpointanalytics.com/" target="_blank">Decimal Point.</a> -->
+		<!-- All rights reserved. -->
+	<!-- </div> -->
+<!-- </div> -->
+
+<!-- </div> -->
+<!----------page-container-------------->
+<script>
+$(function(){
+	let selects = Array.from(document.querySelectorAll('.floating-select'))
+	selects.forEach(select=>{
+		
+		select.addEventListener('change',function(){
+			let value = select.options[select.selectedIndex].text
+			if(value ==='other'){
+				let id = select.getAttribute('id')
+				let h = document.createElement('input')
+				h.setAttribute('class','dtfc form-control')
+				h.setAttribute('type','text')
+				h.setAttribute('id',id)
+			
+				select.parentNode.replaceWith(h)
+			}
+		})
+	})
+})
+</script>
+
+<script>
+	function submitForm() {
+		
+		 if($("#id_issuer_names").val() && $("#id_symbol").val() && $("#id_currency").val() && $("#id_country").val()){
+			var url = "{% url 'company_submit_form' %}";
+			var data = {};
+			data['issuer_names'] = $("#id_issuer_names").val();
+			data['no_of_employees'] = $("#id_no_of_employees").val();
+			data['currency'] = $("#id_currency").val();
+			data['establishment'] = $("#id_establishment").val();
+			data['country'] = $("#id_country").val();
+			data['industry'] = $("#id_industry").val();
+			data['business_description'] = $("#id_business_description").val();
+			data['address'] = $("#id_address").val();
+			data['website'] = $("#id_website").val();
+			data['contact_no'] = $("#id_contact_no").val();
+			data['exchange'] = $("#id_exchange").val();
+			data['country_exchange'] = $("#id_country_exchange").val();
+			data['financial'] = $("#id_financial").val();
+			data['symbol'] = $("#id_symbol").val();
+			data['CIK'] = $("#id_CIK").val();
+			data['ISIN'] = $("#id_ISIN").val();
+			data['CUSIP'] = $("#id_CUSIP").val();
+			data['LEI'] = $("#id_LEI").val();
+			data['SEDOL'] = $("#id_SEDOL").val();
+			data['MIC_Seg'] = $("#id_MIC_Seg").val();
+			data['SIC_Code'] = $("#id_SIC_Code").val();
+			data['MIC_Code'] = $("#id_MIC_Code").val();
+
+			// 2-6-21
+
+			data['issuer_names_pdf'] = $('#id_issuer_names_pdf').val();
+			data['issuer_names_page_no'] = $('#id_issuer_names_page_no').val();
+
+			data['country_pdf'] = $('#id_country_pdf').val();
+			data['country_page_no'] = $('#id_country_page_no').val();
+
+			data['business_pdf'] = $('#id_business_pdf').val();
+			data['business_page_no'] = $('#id_business_page_no').val();
+
+			data['address_pdf'] = $('#id_address_pdf').val();
+			data['address_page_no'] = $('#id_address_page_no').val();
+
+			data['exchange_pdf'] = $('#id_exchange_pdf').val();
+			data['exchange_page_no'] = $('#id_exchange_page_no').val();
+
+			data['symbol_pdf'] = $('#id_symbol_pdf').val();
+			data['symbol_page_no'] = $('#id_symbol_page_no').val();
+
+			bootbox.confirm({
+			message: "Confirm Submit?",
+			buttons: {
+				confirm: {
+				label: 'Yes',
+				className: 'btn-success'
+				},
+				cancel: {
+				label: 'No',
+				className: 'btn-danger'
+				}
+			},
+			callback: function (result) {
+				if(result){
+					start_loading();
+					$.ajax({
+					url: url,
+					method: 'POST',
+					data: JSON.stringify(data),
+					
+					success: function (data) {
+						stop_loading();
+						if(data.status==='already exists'){
+							make_alert("warning","Company already exists!!")
+						}
+						else{
+							make_alert("success","Company added successfully !");
+						}
+					},
+					error: function (jqXHR, status, err) {
+						stop_loading();
+						make_warning_alert("danger","Sorry, Something went wrong.");
+					},
+					});
+				}
+			}
+			});
+		 }else{
+			make_warning_alert("warning","Mandatory fields are required.")
+		} 
+	}
+
+	function Update() {
+		
+		if($("#id_issuer_names").val() && $("#id_symbol").val() && $("#id_currency").val() && $("#id_country").val()){
+			var url = "{% url 'addcompany_update' %}";
+			var data = {};
+			data['issuer_names'] = $("#id_issuer_names").val();
+			data['no_of_employees'] = $("#id_no_of_employees").val();
+			data['currency'] = $("#id_currency").val();
+			data['establishment'] = $("#id_establishment").val();
+			data['country'] = $("#id_country").val();
+			data['industry'] = $("#id_industry").val();
+			data['business_description'] = $("#id_business_description").val();
+			data['address'] = $("#id_address").val();
+			data['website'] = $("#id_website").val();
+			data['contact_no'] = $("#id_contact_no").val();
+			data['exchange'] = $("#id_exchange").val();
+			data['country_exchange'] = $("#id_country_exchange").val();
+			data['financial'] = $("#id_financial").val();
+			data['symbol'] = $("#id_symbol").val();
+			data['CIK'] = $("#id_CIK").val();
+			data['ISIN'] = $("#id_ISIN").val();
+			data['CUSIP'] = $("#id_CUSIP").val();
+			data['LEI'] = $("#id_LEI").val();
+			data['SEDOL'] = $("#id_SEDOL").val();
+			data['MIC_Seg'] = $("#id_MIC_Seg").val();
+			data['SIC_Code'] = $("#id_SIC_Code").val();
+			data['MIC_Code'] = $("#id_MIC_Code").val();
+
+			bootbox.confirm({
+			message: "Confirm Submit?",
+			buttons: {
+				confirm: {
+				label: 'Yes',
+				className: 'btn-success'
+				},
+				cancel: {
+				label: 'No',
+				className: 'btn-danger'
+				}
+			},
+			callback: function (result) {
+				if(result){
+				start_loading();
+				$.ajax({
+					url: url,
+					method: 'POST',
+					data: JSON.stringify(data),
+					
+					success: function (data) {
+						stop_loading();
+						console.log(data)
+						if(data.status==='success'){
+							make_alert("success","Company information updated successfully !");	
+						}
+						else{
+							make_warning_alert("danger","Something went wrong.");
+						}
+					},
+					error: function (jqXHR, status, err) {
+						stop_loading();
+						make_warning_alert("danger","Sorry, Something went wrong.");
+					},
+				});
+			}
+			}
+			});
+		}else{
+			make_warning_alert("warning","Mandatory fields are required.")
+		}
+	}
+</script>
+
+<script>
+
+let pdfFilesEl = Array.from(document.querySelectorAll('.pdf-file'))
+{% comment %} let pageNumbersEl = Array.from(document.querySelectorAll('.page-no'))
+pdfFilesEl.forEach((el,index)=>{
+
+// Input Event to detecte typing and set value accordingly.
+let pageNo = pageNumbersEl[index]
+pageNo.addEventListener('input',function(e){
+	console.log(e.parentElement)
+el.parentElement.parentElement.querySelector('.fr a').href = `${el.value.startsWith('http') ? '' : '/'}${el.value}#page=${e.target.value === '' ? 1 : e.target.value}`;
+
+
+// Check whether select field changed or not
+el.parentElement.parentElement.querySelector('.fr a').href = `${el.value.startsWith('http') ? '' : '/'}${el.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`;
+
+})  
+
+
+
+
+
+
+
+
+
+
+
+
+
+}) {% endcomment %}
+
+pdfFilesEl.forEach(el=>{
+el.addEventListener('change',function(e){
+	console.log(e.target.parentElement)
+const parent = e.target.parentElement.parentElement;
+parent.querySelector('.fr a').href = e.target.value
+
+
+})
+})
+
+
+</script>
+{% comment %} <script>
+let pageNo = document.getElementById('id_country_page_no')
+let pdf = document.getElementById('id_country_pdf')
+pageNo.addEventListener('input',function(e){
+pdf.parentElement.parentElement.querySelector('.fr a').href = `${pdf.value.startsWith('http') ? '' : '/'}${pdf.value}#page=${e.target.value === '' ? 1 : e.target.value}`;
+})
+pdf.parentElement.parentElement.querySelector('.fr a').href = `${pdf.value.startsWith('http') ? '' : '/'}${pdf.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`;
+pdf.addEventListener('change',function(e){
+const parent = e.target.parentElement.parentElement;
+parent.querySelector('.fr a').href = e.target.value.startsWith('http') ? `${e.target.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`  : `/${e.target.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`;
+})
+</script>
+<script>
+let pageNo = document.getElementById('id_business_page_no')
+let pdf = document.getElementById('id_business_pdf')
+pageNo.addEventListener('input',function(e){
+pdf.parentElement.parentElement.querySelector('.fr a').href = `${pdf.value.startsWith('http') ? '' : '/'}${pdf.value}#page=${e.target.value === '' ? 1 : e.target.value}`;
+})
+pdf.parentElement.parentElement.querySelector('.fr a').href = `${pdf.value.startsWith('http') ? '' : '/'}${pdf.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`;
+pdf.addEventListener('change',function(e){
+const parent = e.target.parentElement.parentElement;
+parent.querySelector('.fr a').href = e.target.value.startsWith('http') ? `${e.target.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`  : `/${e.target.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`;
+})
+</script>
+<script>
+let pageNo = document.getElementById('id_address_page_no')
+let pdf = document.getElementById('id_address_pdf')
+pageNo.addEventListener('input',function(e){
+pdf.parentElement.parentElement.querySelector('.fr a').href = `${pdf.value.startsWith('http') ? '' : '/'}${pdf.value}#page=${e.target.value === '' ? 1 : e.target.value}`;
+})
+pdf.parentElement.parentElement.querySelector('.fr a').href = `${pdf.value.startsWith('http') ? '' : '/'}${pdf.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`;
+pdf.addEventListener('change',function(e){
+const parent = e.target.parentElement.parentElement;
+parent.querySelector('.fr a').href = e.target.value.startsWith('http') ? `${e.target.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`  : `/${e.target.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`;
+})
+</script>
+<script>
+let pageNo = document.getElementById('id_symbol_page_no')
+let pdf = document.getElementById('id_symbol_pdf')
+pageNo.addEventListener('input',function(e){
+pdf.parentElement.parentElement.querySelector('.fr a').href = `${pdf.value.startsWith('http') ? '' : '/'}${pdf.value}#page=${e.target.value === '' ? 1 : e.target.value}`;
+})
+pdf.parentElement.parentElement.querySelector('.fr a').href = `${pdf.value.startsWith('http') ? '' : '/'}${pdf.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`;
+pdf.addEventListener('change',function(e){
+const parent = e.target.parentElement.parentElement;
+parent.querySelector('.fr a').href = e.target.value.startsWith('http') ? `${e.target.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`  : `/${e.target.value}#page=${pageNo.value === '' ? 1 : pageNo.value}`;
+})
+</script> {% endcomment %}
+
+<script>
+{% comment %} function addPDF(){    
+	 start_loading();
+		uri = $('#pdf_uri').val()
+		filename = $('#filename').val()
+		data = {uri,filename}
+		console.log(data)
+		 $.ajax({
+			url: '{% url "addpdf" %}', 
+			method: 'POST',
+			data: JSON.stringify(data),
+			success: function (data) {
+				stop_loading();
+				make_alert("success","PDF uploaded successfully !");
+			},
+			error: function (jqXHR, status, err) {
+				stop_loading();
+				make_warning_alert("danger","Sorry, Something went wrong.");
+			},
+		}); 
+		
+} {% endcomment %}
+function addPDF(){
+	 start_loading();
+		file = $('#pdf_file')[0].files[0]
+		uri = $('#pdf_uri').val()
+		
+		filename = $('#uploadfilename').val()
+		var form = new FormData();
+		form.append('filename',filename);
+		form.append('file',file)
+		form.append('uri',uri)
+		 form.append('action', 'add-pdf')
+        form.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
+		   $.ajax({ 
+			url: '{% url "addpdf" %}',
+			method: 'POST',
+			cache: false,
+              processData: false,
+              contentType: false,
+              enctype: 'multipart/form-data',
+			data: form,
+			success: function (data) {
+				stop_loading();
+				make_alert("success","PDF uploaded successfully !");
+			},
+			error: function (jqXHR, status, err) {
+				stop_loading();
+				make_warning_alert("danger","Sorry, Something went wrong.");
+			},
+		});  
+		
+}
+</script>
+
+<style>
+.required-field::after {
+    content: "*";
+    color: red;
+}
+</style>
+{% endblock %}
+
