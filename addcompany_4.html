@@ -1,0 +1,617 @@
+{% extends 'companymaster/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="container-fluid" id="headerbx" style="background-image:url('{% static 'asset/bg.jpg' %}');">
+	<div class="container-fluid filtersearch">
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="headingbg">
+					<h5><i class="icofont-plus"></i> Add Company</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" id="addpdf" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 class="modal-title">Add</h4>
+		  <button type="button" class="close" data-dismiss="modal">
+			<i class="icofont-close-circled"></i>
+		  </button>
+		</div>
+		<div class="modal-body">
+		   <div class="form-group">
+					<label>File Name</label>
+					<div class="line"></div>
+					<input type='text' class='dtfc form-control' name='filename' id='uploadfilename' />
+			</div>
+			<div class="form-group">
+					<label>Add PDF LINK</label>
+					<div class="line"></div>
+					<input type='text' class='dtfc form-control' name='uri' id='pdf_uri' />
+			</div>
+		  <div class="form-group">
+					<label>Add PDF File</label>
+					<div class="line"></div>
+					<input type='file' accept="application/pdf"  class='dtfc form-control' name='file' id='pdf_file' />
+			</div>
+		  
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		  <button type="button" class="btn btn-primary" onclick="addPDF()">Save changes</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+<div class="container-fluid" id="contentmaindiv">
+	<div class="container-fluid whitepatch">
+		<div class="tp_side">
+			<div class="row">
+				<div class="col-md-6">
+					<h3 class="tb_head"><i class="icofont-info-circle"></i> Offering shares
+					</h3>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-2" style='display:flex;gap:4px;margin-left:auto;'>
+					<button style='margin-left:auto;' data-toggle="modal" data-target="#addpdf" type="button" class="btn-sm btn-info btn fl_rg shw" data-original-title="" title=""><i class="icofont-plus"></i> <span>Add PDF</span></button>
+					<div style='width:100px;'>
+					{{offerShare.pdf}}
+					<div class="fr" ><a href="{% static 'asset/pdf.pdf' %}" target="_blank"><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+					
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label class='required-field'>Company</label>
+					<div class="line"></div>
+					{% if companyID %}
+					{{offerShare.company | attr:"disabled:true"}}
+					{% else %}
+					{{offerShare.company}}
+					{% endif %}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label class='required-field'>Offering</label>
+					<div class="line"></div>
+					{% if companyID %}
+					{{offerShare.offering | attr:"disabled:true"}}
+					{% else %}
+					{{ offerShare.offering }}
+					{% endif %}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label>Snapshot Date</label>
+					{{offerShare.snapshot_date}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i> View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-12 fcc">
+				<div class="form-group">
+					<label>Shared Offered min</label>
+					{{offerShare.shares_offered_min}}
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{offerShare.shares_offered_min_pdf}}
+						{{offerShare.shares_offered_min_page_no}}
+					</div>
+				</div>
+			</div>
+
+			
+
+			<div class="col-md-2 col-sm-3 col-xs-12 fcc">
+				<div class="form-group">
+					<label>Shared Offered max</label>
+					{{offerShare.shares_offered_max}}
+					<div class="fr"><a href="asset/pdf.pdf" download=""><i class="icofont-file-pdf"></i> View PDF </a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Strategic Shares Offered</label>
+					{{offerShare.strategic_shares_off}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Add. Shares Offered Above IPO</label>
+					{{offerShare.add_sh_off_above_ipo}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-12 fcc">
+				<div class="form-group">
+					<label>Offer Amount Min</label>
+					{{offerShare.offer_amount_min}}
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{offerShare.offer_amount_min_pdf}}
+						{{offerShare.offer_amount_min_page_no}}
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-3 col-xs-12 fcc">
+				<div class="form-group">
+					<label>Offer Amount Max</label>
+					{{offerShare.offer_amount_max}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-12 fcc">
+				<div class="form-group">
+					<label>Price Range Min</label>
+					{{offerShare.price_range_min}}
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{offerShare.price_range_min_pdf}}
+						{{offerShare.price_range_min_page_no}}
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-3 col-xs-12 fcc">
+				<div class="form-group">
+					<label>Price Range Max</label>
+					{{offerShare.price_range_max}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Underwriting Discount</label>
+					{{offerShare.underwriting_discount}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Proceeds after Expense</label>
+					{{offerShare.proceeds_after_expense}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Shares Outstanding</label>
+					{{offerShare.shares_outstanding}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Shareholder Shares Offered</label>
+					{{offerShare.sh_shares_offered}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Registration Fee</label>
+					{{offerShare.registration_fee}}
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{offerShare.registration_fee_pdf}}
+						{{offerShare.registration_fee_page_no}}
+					</div>
+				</div>
+			</div>			
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Security Description</label>
+					{{offerShare.security_description}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Warants Issued</label>
+					{{offerShare.warants_issued}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Lockup Period</label>
+					{{offerShare.lockup_period}}
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{offerShare.lockup_period_pdf}}
+						{{offerShare.lockup_period_page_no}}
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label>Lockup Expiration</label>
+					{{offerShare.lockup_expiration}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label>Quiet Period Expiration</label>
+					{{offerShare.quiet_period_expiration}}
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{offerShare.quiet_period_expiration_pdf}}
+						{{offerShare.quiet_period_expiration_page_no}}
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">No. of Shares Issued</label>
+					{{offerShare.no_of_shares_issued}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i> View PDF
+						</a></div>
+				</div>
+			</div>
+		
+		<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Total Offering Expense</label>
+					{{offerShare.total_offering_exp}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{offerShare.total_offering_exp_pdf}}
+						{{offerShare.total_offering_exp_page_no}}
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Shares Overalloted</label>
+					{{offerShare.shares_overalloted}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i> View PDF
+						</a></div>
+				</div>
+			</div>
+			
+
+			
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Type Of Equity Instrument</label>
+					{{offerShare.typ_of_eq_instrument}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i> View PDF
+						</a></div>
+				</div>
+			</div>
+
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Legal Fees Expense</label>
+					{{offerShare.legal_fees_exp}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i> View PDF
+						</a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Security Parvalue</label>
+					{{offerShare.security_parvalue}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i> View PDF
+						</a></div>
+				</div>
+			</div>
+
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Security Parvalue Currency</label>
+					{{offerShare.security_parvalue_curr}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i> View PDF
+						</a></div>
+				</div>
+			</div>
+
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Ex Price Of Warants</label>
+					{{offerShare.ex_price_of_warants}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i> View PDF
+						</a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">No Of Grreenshoe Shares Issued</label>
+					{{offerShare.no_of_grreenshoe_sh_iss}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i> View PDF
+						</a></div>
+				</div>
+			</div>
+		
+		
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label>Greenshoe Option Exercise Date</label>
+					{{offerShare.greenshoe_opt_exercise_dt}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i> View PDF
+						</a></div>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label>Prospectus Link</label>
+					{{offerShare.prospectus_link}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i> View PDF
+						</a></div>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label>Shares After Str</label>
+					{{offerShare.shares_after_str}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i> View PDF
+						</a></div>
+				</div>
+			</div>
+
+		</div>
+		
+	</div>	
+</div>
+
+</div>
+</div>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+
+			{% if companyID %}
+			<a href="/addcompany-3-update/{{companyID}}/{{tid}}" type="button" class="btn btn-warning shw">Back</a>	
+			{% elif offering %}
+			<button type="button" class="btn btn-warning shw" disabled>Back</button>
+			{% else %}
+			<a href="/addcompany-3" type="button" class="btn btn-warning shw">Back</a>
+			{% endif %}
+
+			{% if companyID %}
+			<a type="button" id="submitButton" onclick="submitForm({{tid}})" class="btn btn-success shw">Submit</a>
+			{% else %}
+			<a type="button" id="submitButton" onclick="submitForm()" class="btn btn-success shw">Submit</a>
+			{% endif %}
+
+			{% if companyID %}
+			<a href="/addcompany-5-update/{{companyID}}/{{tid}}" type="button" class="btn btn-primary shw">Next</a>	
+			{% elif offering %}
+			<a href="/add-financial" type="button" class="btn btn-primary shw">Next</a>	
+			{% else %}
+			<a href="/addcompany-5" type="button" class="btn btn-primary shw">Next</a>	
+			{% endif %}
+				
+		</div>
+	</div>
+</div>
+
+
+</div>
+<!----------content-wrap-------------->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>
+<script>
+	$(function () {
+		$('#id_lockup_expiration').datepicker()
+		$('#id_greenshoe_opt_exercise_dt').datepicker()
+		$('#id_quiet_period_expiration').datepicker()
+		$('#id_snapshot_date').datepicker()
+	})
+	function submitForm(tid) {
+		if ($("#id_company").val() && $("#id_offering").val() && $("#id_snapshot_date").val()){
+			var url = "{% url 'offering_shares_submit_form' %}";
+			var data = {};
+			data['tid'] = tid;
+			data['shares_offered_min'] = $("#id_shares_offered_min").val();
+			data['shares_offered_max'] = $("#id_shares_offered_max").val();
+			data['strategic_shares_off'] = $("#id_strategic_shares_off").val();
+			data['add_sh_off_above_ipo'] = $("#id_add_sh_off_above_ipo").val();
+			data['offer_amount_min'] = $("#id_offer_amount_min").val();
+			data['offer_amount_max'] = $("#id_add_sh_off_above_ipo").val();
+			data['price_range_min'] = $("#id_price_range_min").val();
+			data['price_range_max'] = $("#id_price_range_max").val();
+			data['underwriting_discount'] = $("#id_underwriting_discount").val();
+			data['proceeds_after_expense'] = $("#id_proceeds_after_expense").val();
+			data['sh_shares_offered'] = $("#id_sh_shares_offered").val();
+			data['shares_outstanding'] = $("#id_shares_outstanding").val();
+			data['registration_fee'] = $("#id_registration_fee").val();
+			data['typ_of_eq_instrument'] = $("#id_typ_of_eq_instrument").val();
+			data['security_description'] = $("#id_security_description").val();
+			data['warants_issued'] = $("#id_warants_issued").val();
+			data['lockup_period'] = $("#id_lockup_period").val();
+			data['lockup_expiration'] = $("#id_lockup_expiration").val();
+			data['quiet_period_expiration'] = $("#id_quiet_period_expiration").val();
+			data['no_of_shares_issued'] = $("#id_no_of_shares_issued").val();
+			data['shares_after_str'] = $("#id_shares_after_str").val();
+			data['greenshoe_opt_exercise_dt'] = $("#id_greenshoe_opt_exercise_dt").val();
+			data['no_of_grreenshoe_sh_iss'] = $("#id_no_of_grreenshoe_sh_iss").val();
+			data['shares_overalloted'] = $("#id_shares_overalloted").val();
+			data['total_offering_exp'] = $("#id_total_offering_exp").val();
+			data['legal_fees_exp'] = $("#id_legal_fees_exp").val();
+			data['security_parvalue'] = $("#id_security_parvalue").val();
+			data['security_parvalue_curr'] = $("#id_security_parvalue_curr").val();
+			data['ex_price_of_warants'] = $("#id_ex_price_of_warants").val();
+			data['prospectus_link'] = $("#id_prospectus_link").val();
+			data['snapshot_date'] = $("#id_snapshot_date").val();
+			data['offering'] = $("#id_offering").val();
+			data['company'] = $("#id_company").val();
+
+			data['shares_offered_min_pdf'] = $("#id_shares_offered_min_pdf").val();
+			data['shares_offered_min_page_no'] = $("#id_shares_offered_min_page_no").val();
+
+			data['offer_amount_min_pdf'] = $("#id_offer_amount_min_pdf").val();
+			data['offer_amount_min_page_no'] = $("#id_offer_amount_min_page_no").val();
+			
+			data['price_range_min_pdf'] = $("#id_price_range_min_pdf").val();
+			data['price_range_min_page_no'] = $("#id_price_range_min_page_no").val();
+			
+			data['registration_fee_pdf'] = $("#id_registration_fee_pdf").val();
+			data['registration_fee_page_no'] = $("#id_registration_fee_page_no").val();
+			
+			data['lockup_period_pdf'] = $("#id_lockup_period_pdf").val();
+			data['lockup_period_page_no'] = $("#id_lockup_period_page_no").val();
+
+			data['quiet_period_expiration_page_no'] = $("#id_quiet_period_expiration_page_no").val();
+			data['quiet_period_expiration_pdf'] = $("#id_quiet_period_expiration_pdf").val();
+			
+			data['total_offering_exp_page_no'] = $("#id_total_offering_exp_page_no").val();
+			data['total_offering_exp_pdf'] = $("#id_total_offering_exp_pdf").val();
+			
+			
+			
+			
+
+			
+		bootbox.confirm({
+			message: "Confirm Submit?",
+			buttons: {
+				confirm: {
+				label: 'Yes',
+				className: 'btn-success'
+				},
+				cancel: {
+				label: 'No',
+				className: 'btn-danger'
+				}
+			},
+			callback: function (result) {
+				if(result){
+					start_loading();
+					$.ajax({
+						url: url,
+						method: 'POST',
+						data: JSON.stringify(data),
+						success: function (data) {
+							stop_loading();
+							make_alert("success","Offering shares details added successfully!");
+						},
+						error: function (jqXHR, status, err) {
+							stop_loading();
+							make_warning_alert("danger","Sorry, Something went wrong.");
+						},
+					});
+				}
+			}
+		});
+		}else{
+			make_warning_alert("warning","Mandatory fields are required.")
+		}
+	}
+</script>
+
+<script>
+let pdfFilesEl = Array.from(document.querySelectorAll('.pdf-file'))
+pdfFilesEl.forEach(el=>{
+el.addEventListener('change',function(e){
+	console.log(e.target.parentElement)
+const parent = e.target.parentElement.parentElement;
+parent.querySelector('.fr a').href = e.target.value
+
+
+})
+})
+</script>
+
+<script>
+function addPDF(){
+	 start_loading();
+		file = $('#pdf_file')[0].files[0]
+		uri = $('#pdf_uri').val()
+		
+		filename = $('#uploadfilename').val()
+		var form = new FormData();
+		form.append('filename',filename);
+		form.append('file',file)
+		form.append('uri',uri)
+		 form.append('action', 'add-pdf')
+        form.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
+		   $.ajax({ 
+			url: '{% url "addpdf" %}',
+			method: 'POST',
+			cache: false,
+              processData: false,
+              contentType: false,
+              enctype: 'multipart/form-data',
+			data: form,
+			success: function (data) {
+				stop_loading();
+				make_alert("success","PDF uploaded successfully !");
+			},
+			error: function (jqXHR, status, err) {
+				stop_loading();
+				make_warning_alert("danger","Sorry, Something went wrong.");
+			},
+		});  
+		
+}
+
+</script>
+
+<style>
+.required-field::after {
+    content: "*";
+    color: red;
+}
+</style>
+{% endblock %}

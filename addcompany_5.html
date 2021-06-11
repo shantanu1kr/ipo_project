@@ -1,0 +1,437 @@
+{% extends 'companymaster/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="container-fluid" id="headerbx" style="background-image:url('{% static 'asset/bg.jpg' %}');">
+	<div class="container-fluid filtersearch">
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="headingbg">
+					<h5><i class="icofont-plus"></i> Add Company</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" id="addpdf" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 class="modal-title">Add</h4>
+		  <button type="button" class="close" data-dismiss="modal">
+			<i class="icofont-close-circled"></i>
+		  </button>
+		</div>
+		<div class="modal-body">
+		   <div class="form-group">
+					<label>File Name</label>
+					<div class="line"></div>
+					<input type='text' class='dtfc form-control' name='filename' id='uploadfilename' />
+			</div>
+			<div class="form-group">
+					<label>Add PDF LINK</label>
+					<div class="line"></div>
+					<input type='text' class='dtfc form-control' name='uri' id='pdf_uri' />
+			</div>
+		  <div class="form-group">
+					<label>Add PDF File</label>
+					<div class="line"></div>
+					<input type='file' accept="application/pdf"  class='dtfc form-control' name='file' id='pdf_file' />
+			</div>
+		  
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		  <button type="button" class="btn btn-primary" onclick="addPDF()">Save changes</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+
+<div class="container-fluid" id="contentmaindiv">
+	<div class="container-fluid whitepatch">
+		<div class="tp_side">
+			<div class="row">
+				<div class="col-md-6">
+					<h3 class="tb_head"><i class="icofont-info-circle"></i> Financial
+					</h3>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-2" style='display:flex;gap:4px;margin-left:auto;'>
+					<button style='margin-left:auto;' data-toggle="modal" data-target="#addpdf" type="button" class="btn-sm btn-info btn fl_rg shw" data-original-title="" title=""><i class="icofont-plus"></i> <span>Add PDF</span></button>
+					<div style='width:100px;'>
+					{{financial.pdf}}
+					<div class="fr" ><a href="{% static 'asset/pdf.pdf' %}" target="_blank"><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+					
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label class='required-field'>Company</label>
+					<div class="line"></div>
+					{% if companyID %}
+					{{financial.company | attr:"disabled:true"}}
+					{% else %}
+					{{financial.company}}
+					{% endif %}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label class='required-field'>Offering</label>
+					<div class="line"></div>
+					{% if companyID %}
+					{{financial.offering | attr:"disabled:true"}}
+					{% else %}
+					{{financial.offering }}
+					{% endif %}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label class='required-field'>Snapshot Date</label>
+					{{financial.date}}
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View PDF </a></div>
+				</div>
+			</div>
+
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Revenue</label>
+					{{financial.revenue}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{financial.revenue_pdf}}
+						{{financial.revenue_page_no}}
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Net Income</label>
+					{{financial.net_income}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View
+							PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">EBIT</label>
+					{{financial.ebit}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View
+							PDF </a></div>
+				</div>
+			</div>
+
+
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">EBITDA</label>
+					{{financial.ebidta}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View
+							PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Y-O-Y Growth</label>
+					{{financial.y_o_y_growth}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View
+							PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Last 12-Month Sales</label>
+					{{financial.last_12_month_sales}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{financial.last_12_month_sales_pdf}}
+						{{financial.last_12_month_sales_page_no}}
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Last 24-Month Sales</label>
+					{{financial.last_24_month_sales}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View
+							PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Total Assets</label>
+					{{financial.total_assets}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{financial.total_assets_pdf}}
+						{{financial.total_assets_page_no}}
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Total Liabilities</label>
+					{{financial.total_liabilities}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div class="fr"><a href="{% static 'asset/pdf.pdf' %}" download=""><i class="icofont-file-pdf"></i>
+							View
+							PDF </a></div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Cash</label>
+					{{financial.cash}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{financial.cash_pdf}}
+						{{financial.cash_page_no}}
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Debt</label>
+					{{financial.debt}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{financial.debt_pdf}}
+						{{financial.debt_page_no}}
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-2 col-sm-3 col-xs-6 fcc">
+				<div class="form-group">
+					<label for="usr">Equity</label>
+					{{financial.equity}}
+					<!-- <input class="dtfc form-control" type="text" placeholder="Type..." /> -->
+					<div style='display:flex;gap:2px;margin-top:2px;'>
+						{{financial.equity_pdf}}
+						{{financial.equity_page_no}}
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+
+			{% if companyID %}
+			<a href="/addcompany-4-update/{{companyID}}/{{tid}}" type="button" class="btn btn-warning shw">Back</a>	
+			{% elif offering %}
+			<button type="button" class="btn btn-warning shw" disabled>Back</button>
+			{% else %}
+			<a href="/addcompany-4" type="button" class="btn btn-warning shw">Back</a>
+			{% endif %}
+
+			{% if companyID %}
+			<a type="button" id="submitButton" onclick="submitForm({{tid}})" class="btn btn-success shw">Submit</a>
+			{% else %}
+			<a type="button" id="submitButton" onclick="submitForm()" class="btn btn-success shw">Submit</a>
+			{% endif %}
+
+		</div>
+	</div>
+</div>
+
+
+</div>
+<!----------content-wrap-------------->
+
+<div id="footer">
+	<div class="container-fluid">
+		<div class="pull-right hidden-xs">
+			<b>Version</b> 2.4.0
+		</div>Copyright © 2018-2019 <a href="https://www.decimalpointanalytics.com/" target="_blank">Decimal Point.</a>
+		All rights reserved.
+	</div>
+</div>
+
+</div>
+<!----------page-container-------------->
+
+<script>
+	$(function () {
+		$('#id_date').datepicker()
+	})
+
+	function submitForm(tid) {
+		
+		if ($("#id_company").val() && $("#id_offering").val() && $("#id_date").val()){
+			var url = "{% url 'financial_submit_form' %}";
+			var data = {};
+			data['tid'] = tid;
+			data['date'] = $("#id_date").val();
+			data['revenue'] = $("#id_revenue").val();
+			data['net_income'] = $("#id_net_income").val();
+			data['ebit'] = $("#id_ebit").val();
+			data['ebidta'] = $("#id_ebidta").val();
+			data['y_o_y_growth'] = $("#id_y_o_y_growth").val();
+			data['last_12_month_sales'] = $("#id_last_12_month_sales").val();
+			data['last_24_month_sales'] = $("#id_last_24_month_sales").val();
+			data['total_assets'] = $("#id_total_assets").val();
+			data['total_liabilities'] = $("#id_total_liabilities").val();
+			data['cash'] = $("#id_cash").val();
+			data['debt'] = $("#id_debt").val();
+			data['equity'] = $("#id_equity").val();
+			data['offering'] = $("#id_offering").val();
+			data['company'] = $("#id_company").val();
+
+			data['revenue_pdf'] = $("#id_revenue_pdf").val();
+			data['revenue_page_no'] = $("#id_revenue_page_no").val();
+
+			data['last_12_month_sales_pdf'] = $("#id_last_12_month_sales_pdf").val();
+			data['last_12_month_sales_page_no'] = $("#id_last_12_month_sales_page_no").val();
+
+			data['total_assets_pdf'] = $("#id_total_assets_pdf").val();
+			data['total_assets_page_no'] = $("#id_total_assets_page_no").val();
+
+			data['cash_pdf'] = $("#id_cash_pdf").val();
+			data['cash_page_no'] = $("#id_cash_page_no").val();
+
+			data['debt_pdf'] = $("#id_debt_pdf").val();
+			data['debt_page_no'] = $("#id_debt_page_no").val();
+			
+			data['equity_pdf'] = $("#id_equity_pdf").val();
+			data['equity_page_no'] = $("#id_equity_page_no").val();
+
+			bootbox.confirm({
+			message: "Confirm Submit?",
+			buttons: {
+				confirm: {
+				label: 'Yes',
+				className: 'btn-success'
+				},
+				cancel: {
+				label: 'No',
+				className: 'btn-danger'
+				}
+			},
+			callback: function (result) {
+				if(result){
+					start_loading();
+					$.ajax({
+						url: url,
+						method: 'POST',
+						data: JSON.stringify(data),
+						success: function (data) {
+							stop_loading();
+							make_view_alert("success","Financial Details added successfully!");
+						},
+						error: function (jqXHR, status, err) {
+							stop_loading();
+							make_warning_alert("danger","Sorry, Something went wrong.");
+						},
+					});
+				}
+			}
+		});
+		}else{
+			make_warning_alert("warning","Mandatory fields are required.")
+		}
+	}
+</script>
+
+<script>
+function addPDF(){
+	 start_loading();
+		file = $('#pdf_file')[0].files[0]
+		uri = $('#pdf_uri').val()
+		
+		filename = $('#uploadfilename').val()
+		var form = new FormData();
+		form.append('filename',filename);
+		form.append('file',file)
+		form.append('uri',uri)
+		 form.append('action', 'add-pdf')
+        form.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
+		   $.ajax({ 
+			url: '{% url "addpdf" %}',
+			method: 'POST',
+			cache: false,
+              processData: false,
+              contentType: false,
+              enctype: 'multipart/form-data',
+			data: form,
+			success: function (data) {
+				stop_loading();
+				make_alert("success","PDF uploaded successfully !");
+			},
+			error: function (jqXHR, status, err) {
+				stop_loading();
+				make_warning_alert("danger","Sorry, Something went wrong.");
+			},
+		});  
+		
+}
+
+</script>
+
+<script>
+let pdfFilesEl = Array.from(document.querySelectorAll('.pdf-file'))
+pdfFilesEl.forEach(el=>{
+el.addEventListener('change',function(e){
+	console.log(e.target.parentElement)
+const parent = e.target.parentElement.parentElement;
+parent.querySelector('.fr a').href = e.target.value
+
+
+})
+})
+</script>
+<style>
+.required-field::after {
+    content: "*";
+    color: red;
+}
+</style>
+
+
+{% endblock %}
